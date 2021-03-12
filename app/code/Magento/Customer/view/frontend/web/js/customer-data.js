@@ -29,16 +29,6 @@ define([
     url.setBaseUrl(window.BASE_URL);
     options.sectionLoadUrl = url.build('customer/section/load');
 
-    //TODO: remove global change, in this case made for initNamespaceStorage
-    $.cookieStorage.setConf({
-        path: '/',
-        expires: 1,
-        samesite: 'lax'
-    });
-
-    storage = $.initNamespaceStorage('mage-cache-storage').localStorage;
-    storageInvalidation = $.initNamespaceStorage('mage-cache-storage-section-invalidation').localStorage;
-
     /**
      * @param {Object} invalidateOptions
      */
@@ -223,6 +213,19 @@ define([
         },
 
         /**
+         * Storage init
+         */
+        initStorage: function () {
+            $.cookieStorage.setConf({
+                path: '/',
+                expires: new Date(Date.now() + parseInt(options.cookieLifeTime, 10) * 1000),
+                samesite: 'lax'
+            });
+            storage = $.initNamespaceStorage('mage-cache-storage').localStorage;
+            storageInvalidation = $.initNamespaceStorage('mage-cache-storage-section-invalidation').localStorage;
+        },
+
+        /**
          * Retrieve the list of sections that has expired since last page reload.
          *
          * Sections can expire due to lifetime constraints or due to inconsistent storage information
@@ -348,6 +351,7 @@ define([
          */
         'Magento_Customer/js/customer-data': function (settings) {
             options = settings;
+            customerData.initStorage();
             invalidateCacheBySessionTimeOut(settings);
             invalidateCacheByCloseCookieSession();
             customerData.init();
