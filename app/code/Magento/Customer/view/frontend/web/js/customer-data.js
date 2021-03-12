@@ -29,9 +29,6 @@ define([
     url.setBaseUrl(window.BASE_URL);
     options.sectionLoadUrl = url.build('customer/section/load');
 
-    storage = $.initNamespaceStorage('mage-cache-storage').localStorage;
-    storageInvalidation = $.initNamespaceStorage('mage-cache-storage-section-invalidation').localStorage;
-
     /**
      * @param {Object} invalidateOptions
      */
